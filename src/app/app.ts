@@ -102,12 +102,12 @@ export class App {
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   async getPuzzle() {
-    const response: any = await firstValueFrom(this.http.get('http://api.losborn.net/api/getPuzzle'));
+    const response: any = await firstValueFrom(this.http.get('https://api.losborn.net/api/getPuzzle'));
     this.puzzle = response.puzzle;
   }
 
   async getAnswer() {
-    const response: any = await firstValueFrom(this.http.get('http://api.losborn.net/api/getAnswer'));
+    const response: any = await firstValueFrom(this.http.get('https://api.losborn.net/api/getAnswer'));
     this.answer = response.answer;
   }
 
