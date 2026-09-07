@@ -1,5 +1,6 @@
 import { Component, ChangeDetectorRef, HostListener, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { NgClass } from '@angular/common'
+import { NgClass } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
@@ -21,7 +22,7 @@ interface Cell {
 
 @Component({
   selector: 'app-root',
-  imports: [NgClass],
+  imports: [NgClass, NgStyle],
   templateUrl: './app.html',
 })
 

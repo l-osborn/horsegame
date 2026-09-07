@@ -2,16 +2,37 @@
   <h4 class="text-bold text-lg">enclose.donkey</h4>
 </div>
 <br/>
-<div class='flex flex-col items-center w-fit mx-auto grid-container'>
+<div class="flex flex-col items-center w-fit mx-auto">
+  <div
+    class="grid gap-1 aspect-square"
+    [ngStyle]="{
+      'width': 'min(700px, 70vw)',
+      'grid-template-columns': 'repeat(' + puzzleGrid[0].length + ', minmax(0, 1fr))',
+      'grid-template-rows': 'repeat(' + puzzleGrid.length + ', minmax(0, 1fr))'
+    }"
+  >
     @for (row of puzzleGrid; track $index) {
-      <div class='flex'>
-        @for (cell of row; track $index) {
-          <div [ngClass]='cell.color' class='cell 
-               text-white grid place-items-center text-bold text-4xl'
-               (click)="cellClicked(cell)">{{cell.hasDonkey ? '----o\n/\\/\\' : ''}}</div>
-        }
-      </div>
+      @for (cell of row; track $index) {
+        <div
+          [ngClass]="cell.color"
+          class="w-full h-full flex items-center justify-center overflow-hidden"
+          (click)="cellClicked(cell)"
+        >
+          @if (cell.hasDonkey) {
+            <svg viewBox="0 0 100 100" class="w-[85%] h-[85%]" preserveAspectRatio="xMidYMid meet">
+              <text x="50" y="38" text-anchor="middle" dominant-baseline="middle"
+                    font-size="32" fill="white" font-family="monospace"
+                    textLength="90" lengthAdjust="spacingAndGlyphs">----o</text>
+              <text x="50" y="68" text-anchor="middle" dominant-baseline="middle"
+                    font-size="32" fill="white" font-family="monospace"
+                    textLength="90" lengthAdjust="spacingAndGlyphs">/\/\</text>
+            </svg>
+          }
+        </div>
+      }
     }
+    <br/>
+  </div>
     @if (!submitted) {
       <div class="flex justify-between items-start self-stretch w-full">  
         <button class="btn" (click)="submit()" [disabled]="score === 0">Submit Answer</button>
@@ -28,5 +49,6 @@
       <h4 class="text-bold text-lg">Score: {{score}}</h4>
       <h4 class="text-bold text-lg">Optimal Score: {{answerScore}}</h4>
       <button class="btn w-50" (click)="toggleAnswer()">{{showingAnswer ? 'See Your Answer' : 'See Optimal Answer'}}</button>
+      <h4 class="text-bold text-lg">Check back tomorrow for a new puzzle!</h4>
     }
 </div>
