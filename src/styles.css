@@ -2,3 +2,16 @@
 
 @import "tailwindcss";
 @plugin "daisyui";
+
+.grid-container {
+  /* cap the whole grid's width so it never exceeds the viewport */
+  max-width: 95vw;
+}
+
+.cell {
+  /* size scales with the smaller of viewport width/height, but caps at 80px */
+  width: min(20vmin, 5rem);
+  height: min(20vmin, 5rem);
+  margin: 0.25rem;
+  font-size: min(6vmin, 1.5rem); /* keep the donkey glyphs readable but scaled */
+}

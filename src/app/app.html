@@ -2,11 +2,11 @@
   <h4 class="text-bold text-lg">enclose.donkey</h4>
 </div>
 <br/>
-<div class='flex flex-col items-center w-fit mx-auto'>
+<div class='flex flex-col items-center w-fit mx-auto grid-container'>
     @for (row of puzzleGrid; track $index) {
       <div class='flex'>
         @for (cell of row; track $index) {
-          <div [ngClass]='cell.color' class='w-20 h-20 m-1 
+          <div [ngClass]='cell.color' class='cell 
                text-white grid place-items-center text-bold text-4xl'
                (click)="cellClicked(cell)">{{cell.hasDonkey ? '----o\n/\\/\\' : ''}}</div>
         }
