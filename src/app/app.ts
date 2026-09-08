@@ -151,7 +151,7 @@ export class App {
   }
 
   cellClicked(cell: Cell) {
-    if (!cell.isWater && !this.submitted) {
+    if (!cell.isWater && ! cell.hasDonkey && !this.submitted) {
       if ((cell.color === Color.Green || cell.color === Color.Yellow) && this.currentWalls < this.maxWalls && cell.portalType == 0) {
         cell.color = Color.Gray;
         this.currentWalls += 1;
