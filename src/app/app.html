@@ -27,7 +27,15 @@
     @if (!submitted) {
       <div class="flex justify-between items-start self-stretch w-full">  
         <button class="btn" (click)="submit()" [disabled]="score === 0">Submit Answer</button>
-        <h4 class="text-bold text-lg">{{currentWalls}} / {{maxWalls}} walls used</h4>
+        <div>
+          <h4 class="text-bold text-lg">{{currentWalls}} / {{maxWalls}} walls used</h4>
+          @if (puzzle.includes('c')) {
+            <h4 class="text-bold text-lg">🍒 = +3</h4>
+          }
+          @if (puzzle.includes('B')) {
+            <h4 class="text-bold text-lg">🐝 = -5</h4>
+          }
+        </div>
         <div>
           <h4 class="text-bold text-lg">Score: {{score}}</h4>
           <h4 class="text-bold text-lg">Best Score: {{bestScore}}</h4>
