@@ -16,7 +16,16 @@ enum Glyph {
   None = "",
   Donkey = "🫏",
   Cherry = "🍒",
-  Bee = "🐝"
+  Bee = "🐝",
+  PortalRed = '🔴',
+  PortalOrange = '🟠',
+  PortalYellow = '🟡',
+  PortalGreen = '🟢',
+  PortalBlue = '🔵',
+  PortalPurple = '🟣',
+  PortalBlack = '⚫️',
+  PortalWhite = '⚪️',
+  PortalBrown = '🟤',
 }
 
 interface Cell {
@@ -27,6 +36,7 @@ interface Cell {
   hasDonkey: boolean;
   glyph: Glyph;
   scoreModifier: number;
+  portalType: number;
 }
 
 @Component({
@@ -56,6 +66,8 @@ export class App {
   showingAnswer = false;
   playerAnswerGrid: Cell[][] = [];
 
+  portalGlyphs: Glyph[] = [Glyph.PortalRed, Glyph.PortalOrange, Glyph.PortalYellow, Glyph.PortalGreen, Glyph.PortalBlue, Glyph.PortalPurple, Glyph.PortalBlack, Glyph.PortalWhite, Glyph.PortalBrown];
+
   @ViewChild('resultsModal') resultsModal!: ElementRef<HTMLDialogElement>;
 
   async ngOnInit(): Promise<void> {
@@ -66,20 +78,23 @@ export class App {
       for (let i = 0; i < puzzleList.length; i++) {
         let row = [];
         for (let j = 0; j < puzzleList[i].length; j++) {
-          if (puzzleList[i][j] === "g") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
-          } else if (puzzleList[i][j] === "b") {
-            row[j] = {color: Color.Blue, hasWall: false, isWater: true, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
-          } else if (puzzleList[i][j] === "d") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: true, glyph: Glyph.Donkey, scoreModifier: 0};
+          let currentCell = puzzleList[i][j];
+          if (currentCell === "g") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0, portalType: 0};
+          } else if (currentCell === "b") {
+            row[j] = {color: Color.Blue, hasWall: false, isWater: true, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0, portalType: 0};
+          } else if (currentCell === "d") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: true, glyph: Glyph.Donkey, scoreModifier: 0, portalType: 0};
             this.donkeyX = j;
             this.donkeyY = i;
-          } else if (puzzleList[i][j] === "c") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Cherry, scoreModifier: 3};
-          } else if (puzzleList[i][j] === "B") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Bee, scoreModifier: -5};
+          } else if (currentCell === "c") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Cherry, scoreModifier: 3, portalType: 0};
+          } else if (currentCell === "B") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Bee, scoreModifier: -5, portalType: 0};
+          } else if (this.isPortal(currentCell) ) {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: this.portalGlyphs[Number(currentCell) - 1], scoreModifier: 0, portalType: Number(currentCell)};
           } else {
-            row[j] = {color: Color.None, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
+            row[j] = {color: Color.None, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0, portalType: 0};
           }
         }
         this.puzzleGrid[i] = row;
@@ -91,20 +106,23 @@ export class App {
       for (let i = 0; i < answerList.length; i++) {
         let row = [];
         for (let j = 0; j < answerList[i].length; j++) {
-          if (answerList[i][j] === "g") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
-          } else if (answerList[i][j] === "b") {
-            row[j] = {color: Color.Blue, hasWall: false, isWater: true, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
-          } else if (answerList[i][j] === "d") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: true, glyph: Glyph.Donkey, scoreModifier: 0};
-          } else if (answerList[i][j] === "w") {
-            row[j] = {color: Color.Gray, hasWall: true, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
-          } else if (answerList[i][j] === "c") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Cherry, scoreModifier: 3};
-          } else if (answerList[i][j] === "B") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Bee, scoreModifier: -5};
+          let currentCell = answerList[i][j];
+          if (currentCell === "g") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0, portalType: 0};
+          } else if (currentCell === "b") {
+            row[j] = {color: Color.Blue, hasWall: false, isWater: true, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0, portalType: 0};
+          } else if (currentCell === "d") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: true, glyph: Glyph.Donkey, scoreModifier: 0, portalType: 0};
+          } else if (currentCell === "w") {
+            row[j] = {color: Color.Gray, hasWall: true, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0, portalType: 0};
+          } else if (currentCell === "c") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Cherry, scoreModifier: 3, portalType: 0};
+          } else if (currentCell === "B") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Bee, scoreModifier: -5, portalType: 0};
+          } else if (this.isPortal(currentCell) ) {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: this.portalGlyphs[Number(currentCell) - 1], scoreModifier: -5, portalType: Number(currentCell)};
           } else {
-            row[j] = {color: Color.None, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
+            row[j] = {color: Color.None, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0, portalType: 0};
           }
         }
         this.answerGrid[i] = row;
@@ -114,6 +132,10 @@ export class App {
     } catch (error) {
       console.error('Initialization failed', error);
     }
+  }
+
+  isPortal(str: string): boolean {
+    return !isNaN(Number(str)) && str.trim() !== "" && str !== '0';
   }
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
@@ -129,8 +151,8 @@ export class App {
   }
 
   cellClicked(cell: Cell) {
-    if (!cell.isWater && !cell.hasDonkey && !this.submitted) {
-      if ((cell.color === Color.Green || cell.color === Color.Yellow) && this.currentWalls < this.maxWalls) {
+    if (!cell.isWater && !this.submitted) {
+      if ((cell.color === Color.Green || cell.color === Color.Yellow) && this.currentWalls < this.maxWalls && cell.portalType == 0) {
         cell.color = Color.Gray;
         this.currentWalls += 1;
         cell.hasWall = !cell.hasWall;
@@ -161,7 +183,18 @@ export class App {
           return true;
         } else {
           cell.isScoring = true;
-          return this.checkEnclosed(grid, x - 1, y) && this.checkEnclosed(grid, x + 1, y) && this.checkEnclosed(grid, x, y - 1) && this.checkEnclosed(grid, x, y + 1);
+          let portalEnclosed = true;
+          if (cell.portalType !== 0) {
+            for (let y2 = 0; y2 < grid.length; y2++) {
+              for (let x2 = 0; x2 < grid[y2].length; x2++) {
+                let cell2 = grid[y2][x2];
+                if (cell2.portalType === cell.portalType && !(x2 == x && y2 == y) ) {
+                  portalEnclosed = this.checkEnclosed(grid, x2, y2);
+                }
+              }
+            }
+          }
+          return this.checkEnclosed(grid, x - 1, y) && this.checkEnclosed(grid, x + 1, y) && this.checkEnclosed(grid, x, y - 1) && this.checkEnclosed(grid, x, y + 1);// && portalEnclosed;
         }
       } else {
         return false;
