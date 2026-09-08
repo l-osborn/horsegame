@@ -15,19 +15,10 @@
       @for (cell of row; track $index) {
         <div
           [ngClass]="cell.color"
-          class="w-full h-full flex items-center justify-center overflow-hidden"
+          class="w-full h-full flex items-center justify-center overflow-hidden text-[clamp(1.1rem,3.8vw,2.6rem)]"
           (click)="cellClicked(cell)"
         >
-          @if (cell.hasDonkey) {
-            <svg viewBox="0 0 100 100" class="w-[85%] h-[85%]" preserveAspectRatio="xMidYMid meet">
-              <text x="50" y="38" text-anchor="middle" dominant-baseline="middle"
-                    font-size="32" fill="white" font-family="monospace"
-                    textLength="90" lengthAdjust="spacingAndGlyphs">----o</text>
-              <text x="50" y="68" text-anchor="middle" dominant-baseline="middle"
-                    font-size="32" fill="white" font-family="monospace"
-                    textLength="90" lengthAdjust="spacingAndGlyphs">/\/\</text>
-            </svg>
-          }
+          {{cell.glyph}}
         </div>
       }
     }

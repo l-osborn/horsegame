@@ -12,12 +12,21 @@ enum Color {
   Blue = "bg-blue-600"
 }
 
+enum Glyph {
+  None = "",
+  Donkey = "🫏",
+  Cherry = "🍒",
+  Bee = "🐝"
+}
+
 interface Cell {
   color: Color;
   hasWall: boolean;
   isWater: boolean;
   isScoring: boolean;
   hasDonkey: boolean;
+  glyph: Glyph;
+  scoreModifier: number;
 }
 
 @Component({
@@ -58,15 +67,19 @@ export class App {
         let row = [];
         for (let j = 0; j < puzzleList[i].length; j++) {
           if (puzzleList[i][j] === "g") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false};
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
           } else if (puzzleList[i][j] === "b") {
-            row[j] = {color: Color.Blue, hasWall: false, isWater: true, isScoring: false, hasDonkey: false};
+            row[j] = {color: Color.Blue, hasWall: false, isWater: true, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
           } else if (puzzleList[i][j] === "d") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: true};
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: true, glyph: Glyph.Donkey, scoreModifier: 0};
             this.donkeyX = j;
             this.donkeyY = i;
+          } else if (puzzleList[i][j] === "c") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Cherry, scoreModifier: 3};
+          } else if (puzzleList[i][j] === "B") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Bee, scoreModifier: -5};
           } else {
-            row[j] = {color: Color.None, hasWall: false, isWater: false, isScoring: false, hasDonkey: false};
+            row[j] = {color: Color.None, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
           }
         }
         this.puzzleGrid[i] = row;
@@ -79,15 +92,19 @@ export class App {
         let row = [];
         for (let j = 0; j < answerList[i].length; j++) {
           if (answerList[i][j] === "g") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false};
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
           } else if (answerList[i][j] === "b") {
-            row[j] = {color: Color.Blue, hasWall: false, isWater: true, isScoring: false, hasDonkey: false};
+            row[j] = {color: Color.Blue, hasWall: false, isWater: true, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
           } else if (answerList[i][j] === "d") {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: true};
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: true, glyph: Glyph.Donkey, scoreModifier: 0};
           } else if (answerList[i][j] === "w") {
-            row[j] = {color: Color.Gray, hasWall: true, isWater: false, isScoring: false, hasDonkey: false};
+            row[j] = {color: Color.Gray, hasWall: true, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
+          } else if (answerList[i][j] === "c") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Cherry, scoreModifier: 3};
+          } else if (answerList[i][j] === "B") {
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Bee, scoreModifier: -5};
           } else {
-            row[j] = {color: Color.None, hasWall: false, isWater: false, isScoring: false, hasDonkey: false};
+            row[j] = {color: Color.None, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0};
           }
         }
         this.answerGrid[i] = row;
@@ -160,7 +177,7 @@ export class App {
       for (let j = 0; j < grid[i].length; j++) {
         if (grid[i][j].isScoring) {
           grid[i][j].color = Color.Yellow;
-          scoreCounter += 1;
+          scoreCounter += 1 + grid[i][j].scoreModifier;
         }
       }
     }
