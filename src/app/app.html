@@ -25,8 +25,12 @@
     <br/>
   </div>
     @if (!submitted) {
-      <div class="flex justify-between items-start self-stretch w-full">  
-        <button class="btn" (click)="submit()" [disabled]="score === 0">Submit Answer</button>
+      <div class="flex justify-between items-start self-stretch w-full">
+        <div>
+          <button class="btn" (click)="submit()" [disabled]="score === 0">Submit Answer</button>
+          <br/><br/>
+          <button class="btn" (click)="clear()">Clear Walls</button>
+        </div>
         <div>
           <h4 class="text-bold text-lg">{{currentWalls}} / {{maxWalls}} walls used</h4>
           @if (puzzle.includes('c')) {

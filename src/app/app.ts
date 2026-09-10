@@ -65,6 +65,7 @@ export class App {
   answerScore = 0;
   showingAnswer = false;
   playerAnswerGrid: Cell[][] = [];
+  clearGrid: Cell[][] = [];
 
   portalGlyphs: Glyph[] = [Glyph.PortalRed, Glyph.PortalOrange, Glyph.PortalYellow, Glyph.PortalGreen, Glyph.PortalBlue, Glyph.PortalPurple, Glyph.PortalBlack, Glyph.PortalWhite, Glyph.PortalBrown];
 
@@ -99,6 +100,7 @@ export class App {
         }
         this.puzzleGrid[i] = row;
       }
+      this.clearGrid = structuredClone(this.puzzleGrid);
       this.cdr.detectChanges();
 
       await this.getAnswer();
@@ -151,8 +153,8 @@ export class App {
   }
 
   cellClicked(cell: Cell) {
-    if (!cell.isWater && ! cell.hasDonkey && !this.submitted) {
-      if ((cell.color === Color.Green || cell.color === Color.Yellow) && this.currentWalls < this.maxWalls && cell.portalType == 0) {
+    if (!cell.isWater && !cell.hasDonkey && !this.submitted && cell.glyph === Glyph.None) {
+      if ((cell.color === Color.Green || cell.color === Color.Yellow) && this.currentWalls < this.maxWalls) {
         cell.color = Color.Gray;
         this.currentWalls += 1;
         cell.hasWall = !cell.hasWall;
@@ -238,6 +240,12 @@ export class App {
   submit() {
     this.submitted = true;
     this.playerAnswerGrid = structuredClone(this.puzzleGrid);
+  }
+
+  clear() {
+    this.puzzleGrid = structuredClone(this.clearGrid);
+    this.currentWalls = 0;
+    this.score = 0;
   }
 
   toggleAnswer(){
