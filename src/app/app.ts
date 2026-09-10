@@ -122,7 +122,7 @@ export class App {
           } else if (currentCell === "B") {
             row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.Bee, scoreModifier: -5, portalType: 0};
           } else if (this.isPortal(currentCell) ) {
-            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: this.portalGlyphs[Number(currentCell) - 1], scoreModifier: -5, portalType: Number(currentCell)};
+            row[j] = {color: Color.Green, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: this.portalGlyphs[Number(currentCell) - 1], scoreModifier: 0, portalType: Number(currentCell)};
           } else {
             row[j] = {color: Color.None, hasWall: false, isWater: false, isScoring: false, hasDonkey: false, glyph: Glyph.None, scoreModifier: 0, portalType: 0};
           }
@@ -196,7 +196,7 @@ export class App {
               }
             }
           }
-          return this.checkEnclosed(grid, x - 1, y) && this.checkEnclosed(grid, x + 1, y) && this.checkEnclosed(grid, x, y - 1) && this.checkEnclosed(grid, x, y + 1);// && portalEnclosed;
+          return this.checkEnclosed(grid, x - 1, y) && this.checkEnclosed(grid, x + 1, y) && this.checkEnclosed(grid, x, y - 1) && this.checkEnclosed(grid, x, y + 1) && portalEnclosed;
         }
       } else {
         return false;
